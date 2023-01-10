@@ -1,0 +1,9 @@
+{
+	"name": "group5-adf",
+	"location": "southindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "cb278bde-9bd8-4f26-983a-c19d402777ce",
+		"tenantId": "c6c256aa-8f33-4216-8cab-6fdc4ebdc083"
+	}
+}
