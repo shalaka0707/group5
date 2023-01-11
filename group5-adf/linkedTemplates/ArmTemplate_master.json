@@ -1,0 +1,112 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "group5-adf"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"LS_ADLS_group5dxc_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LS_ADLS_group5dxc'"
+		},
+		"LS_ASA_azuresynapseanalyticsgroup5_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_ASA_azuresynapseanalyticsgroup5'"
+		},
+		"raw_container_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'raw_container'"
+		},
+		"silver_container_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'silver_container'"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://group5dxc.dfs.core.windows.net/"
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0109-165823-w3mfnqpl"
+		},
+		"LS_ADLS_group5dxc_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://group5dxc.dfs.core.windows.net/"
+		},
+		"raw_container_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://group5dxc.dfs.core.windows.net/"
+		},
+		"silver_container_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://group5dxc.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "group5-adf_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureDataLakeStorage1_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					},
+					"LS_ADLS_group5dxc_accountKey": {
+						"value": "[parameters('LS_ADLS_group5dxc_accountKey')]"
+					},
+					"LS_ASA_azuresynapseanalyticsgroup5_connectionString": {
+						"value": "[parameters('LS_ASA_azuresynapseanalyticsgroup5_connectionString')]"
+					},
+					"raw_container_accountKey": {
+						"value": "[parameters('raw_container_accountKey')]"
+					},
+					"silver_container_accountKey": {
+						"value": "[parameters('silver_container_accountKey')]"
+					},
+					"AzureDataLakeStorage1_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
+					},
+					"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('AzureDatabricks1_properties_typeProperties_existingClusterId')]"
+					},
+					"LS_ADLS_group5dxc_properties_typeProperties_url": {
+						"value": "[parameters('LS_ADLS_group5dxc_properties_typeProperties_url')]"
+					},
+					"raw_container_properties_typeProperties_url": {
+						"value": "[parameters('raw_container_properties_typeProperties_url')]"
+					},
+					"silver_container_properties_typeProperties_url": {
+						"value": "[parameters('silver_container_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

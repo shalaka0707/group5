@@ -1,0 +1,467 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "group5-adf"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"LS_ADLS_group5dxc_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LS_ADLS_group5dxc'"
+		},
+		"LS_ASA_azuresynapseanalyticsgroup5_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_ASA_azuresynapseanalyticsgroup5'"
+		},
+		"raw_container_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'raw_container'"
+		},
+		"silver_container_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'silver_container'"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://group5dxc.dfs.core.windows.net/"
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0109-165823-w3mfnqpl"
+		},
+		"LS_ADLS_group5dxc_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://group5dxc.dfs.core.windows.net/"
+		},
+		"raw_container_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://group5dxc.dfs.core.windows.net/"
+		},
+		"silver_container_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://group5dxc.dfs.core.windows.net/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDatabricks1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-5279483147264208.8.azuredatabricks.net",
+					"authentication": "MSI",
+					"workspaceResourceId": "/subscriptions/92ae4a1f-517d-4ee2-a498-9926f8c7a2cd/resourceGroups/group5-resources/providers/Microsoft.Databricks/workspaces/databricks-group5",
+					"existingClusterId": "[parameters('AzureDatabricks1_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_ADLS_group5dxc')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('LS_ADLS_group5dxc_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('LS_ADLS_group5dxc_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_ASA_azuresynapseanalyticsgroup5')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_ASA_azuresynapseanalyticsgroup5_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/raw_container')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('raw_container_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('raw_container_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/silver_container')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('silver_container_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('silver_container_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ingest_circuits_races_files')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ingest_circuits_file",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/ingestion/ingest_circuits_file"
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricks1",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ingest_races_file",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "ingest_circuits_file",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/ingestion/ingest_races_file"
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricks1",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-01-10T17:27:47Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricks1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_Source_Racedetails')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ADLS_group5dxc",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "races.csv",
+						"fileSystem": "silver"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "raceId",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "round",
+						"type": "String"
+					},
+					{
+						"name": "circuitId",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "date",
+						"type": "String"
+					},
+					{
+						"name": "time",
+						"type": "String"
+					},
+					{
+						"name": "url",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS_group5dxc')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_Target_RaceDetails')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ASA_azuresynapseanalyticsgroup5",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "year",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Race_Count_PerYear",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Created_Date",
+						"type": "date"
+					},
+					{
+						"name": "Created_By",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Race"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ASA_azuresynapseanalyticsgroup5')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_ADLS_AzureSynapseAnalytics')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DS_ADLS_Source_Racedetails",
+								"type": "DatasetReference"
+							},
+							"name": "SrcRace"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DS_ADLS_Target_RaceDetails",
+								"type": "DatasetReference"
+							},
+							"name": "SinkAzureSynapseAnalytics",
+							"rejectedDataLinkedService": {
+								"referenceName": "LS_ADLS_group5dxc",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "SelectRemovedUnwantedColumn"
+						},
+						{
+							"name": "AggYearWiseRaceCounts"
+						},
+						{
+							"name": "DetiveAuditColumns"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          raceId as string,",
+						"          year as string,",
+						"          round as string,",
+						"          circuitId as string,",
+						"          name as string,",
+						"          date as string,",
+						"          time as string,",
+						"          url as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> SrcRace",
+						"SrcRace select(mapColumn(",
+						"          raceId,",
+						"          year,",
+						"          round",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SelectRemovedUnwantedColumn",
+						"SelectRemovedUnwantedColumn aggregate(groupBy(year),",
+						"     Race_Count_PerYear = count(raceId)) ~> AggYearWiseRaceCounts",
+						"AggYearWiseRaceCounts derive(Created_Date = currentDate(),",
+						"          Created_By = \"ADF\") ~> DetiveAuditColumns",
+						"DetiveAuditColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          year as string,",
+						"          Race_Count_PerYear as long,",
+						"          Created_Date as date,",
+						"          Created_By as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     staged: true,",
+						"     allowCopyCommand: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'allErrors',",
+						"     transactionCommit: 'single',",
+						"     reportSuccessOnError: false) ~> SinkAzureSynapseAnalytics"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_Source_Racedetails')]",
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_Target_RaceDetails')]",
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS_group5dxc')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Calling_DataFlow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_ADLS_AzureSynapseAnalytics",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_ADLS_AzureSynapseAnalytics",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"SrcRace": {},
+									"SinkAzureSynapseAnalytics": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "LS_ADLS_group5dxc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "silver"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_ADLS_AzureSynapseAnalytics')]",
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS_group5dxc')]"
+			]
+		}
+	]
+}

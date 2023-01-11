@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "group5-adf"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"LS_ADLS_group5dxc_accountKey": {
+			"value": ""
+		},
+		"LS_ASA_azuresynapseanalyticsgroup5_connectionString": {
+			"value": ""
+		},
+		"raw_container_accountKey": {
+			"value": ""
+		},
+		"silver_container_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://group5dxc.dfs.core.windows.net/"
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"value": "0109-165823-w3mfnqpl"
+		},
+		"LS_ADLS_group5dxc_properties_typeProperties_url": {
+			"value": "https://group5dxc.dfs.core.windows.net/"
+		},
+		"raw_container_properties_typeProperties_url": {
+			"value": "https://group5dxc.dfs.core.windows.net/"
+		},
+		"silver_container_properties_typeProperties_url": {
+			"value": "https://group5dxc.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
