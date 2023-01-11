@@ -5,6 +5,10 @@
 		"typeProperties": {
 			"sources": [
 				{
+					"dataset": {
+						"referenceName": "DS_ADLS_Source_Racedetails",
+						"type": "DatasetReference"
+					},
 					"name": "SrcRace"
 				}
 			],
@@ -33,8 +37,19 @@
 				}
 			],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> SrcRace",
+				"source(output(",
+				"          raceId as string,",
+				"          year as string,",
+				"          round as string,",
+				"          circuitId as string,",
+				"          name as string,",
+				"          date as string,",
+				"          time as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> SrcRace",
 				"SrcRace select(mapColumn(",
 				"          raceId,",
 				"          year,",
