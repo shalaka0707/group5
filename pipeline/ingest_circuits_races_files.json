@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "ingest_circuits_races_files",
 	"properties": {
 		"activities": [
 			{
