@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "races.csv",
-				"fileSystem": "bronze"
+				"fileSystem": "silver"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
