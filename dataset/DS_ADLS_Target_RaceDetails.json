@@ -1,0 +1,34 @@
+{
+	"name": "DS_ADLS_Target_RaceDetails",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ASA_azuresynapseanalyticsgroup5",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "year",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Race_Count_PerYear",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "Created_Date",
+				"type": "date"
+			},
+			{
+				"name": "Created_By",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Race"
+		}
+	}
+}

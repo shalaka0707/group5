@@ -1,0 +1,79 @@
+{
+	"name": "DF_ADLS_AzureSynapseAnalytics",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Parquet1",
+						"type": "DatasetReference"
+					},
+					"name": "SrcRace"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_ADLS_Target_RaceDetails",
+						"type": "DatasetReference"
+					},
+					"name": "SinkAzureSynapseAnalytics",
+					"rejectedDataLinkedService": {
+						"referenceName": "LS_ADLS_group5dxc",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "SelectRemovedUnwantedColumn"
+				},
+				{
+					"name": "AggYearWiseRaceCounts"
+				},
+				{
+					"name": "DetiveAuditColumns"
+				}
+			],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> SrcRace",
+				"SrcRace select(mapColumn(",
+				"          raceId,",
+				"          year,",
+				"          round",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectRemovedUnwantedColumn",
+				"SelectRemovedUnwantedColumn aggregate(groupBy(year),",
+				"     Race_Count_PerYear = count(raceId)) ~> AggYearWiseRaceCounts",
+				"AggYearWiseRaceCounts derive(Created_Date = currentDate(),",
+				"          Created_By = \"ADF\") ~> DetiveAuditColumns",
+				"DetiveAuditColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          year as string,",
+				"          Race_Count_PerYear as long,",
+				"          Created_Date as date,",
+				"          Created_By as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'allErrors',",
+				"     transactionCommit: 'single',",
+				"     reportSuccessOnError: false) ~> SinkAzureSynapseAnalytics"
+			]
+		}
+	}
+}
