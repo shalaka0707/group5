@@ -1,0 +1,12 @@
+{
+	"name": "silver_container",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://group5dxc.dfs.core.windows.net/",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDNEQzVFRjNELTVBNjQtNDgyRi1CQjM0LUVDRkZFQzRGM0U5Q19lNWY5ZWU1Yy1mYTUwLTQ2MzAtYTAxYS1kMDk4Yzk5M2E5YmIiDQp9"
+		}
+	}
+}
